@@ -6,12 +6,16 @@ const coords = [
     [1, 2],
 ]
 
+const startPos = 0;
+const endPos = 4;
+let current = startPos;
+
+
 let points = []
 let lines = []
 
-let connections = {
-
-}
+let connections = {} // Number of adjacent points
+let adjacents = {} // The index of adjacent points
 
 class Point {
     constructor(pos) {
@@ -40,6 +44,19 @@ class Line {
     }
 }
 
+function removeDuplicatesFromDictionary(adjacent) {
+    const cleanedDictionary = {};
+
+    Object.keys(adjacent).forEach(key => {
+        const array = adjacent[key];       
+        const uniqueArray = Array.from(new Set(array));
+        
+        cleanedDictionary[key] = uniqueArray;
+    });
+
+    return cleanedDictionary;
+}
+
 
 let game = {
     start: function() {
@@ -52,7 +69,7 @@ let game = {
         this.canvas.width = 600;
 
         for (let i = 0; i < coords.length; i++) {
-            points.push(new Point(new Vector2D((coords[i][0]*100)+50, this.canvas.height-((coords[i][1]*100)+50))))
+            points.push(new Point(new Vector2D((coords[i][0]*100)+100, this.canvas.height-((coords[i][1]*100)+100))))
         }
 
         
@@ -64,20 +81,45 @@ let game = {
                         
                         if (i in connections) {
                             connections[i] += 1
+
+                            if (i in adjacents) {
+                                adjacents[i].push(points[j])
+                            } else {
+                                adjacents[i] = [points[j]]
+                            }
                         } else {
                             connections[i] = 1
+                            
+                            if (i in adjacents) {
+                                adjacents[i].push(points[j])
+                            } else {
+                                adjacents[i] = [points[j]]
+                            }
                         }
 
                         if (j in connections) {
                             connections[j] += 1
+                            
+                            if (j in adjacents) {
+                                adjacents[j].push(points[i])
+                            } else {
+                                adjacents[j] = [points[i]]
+                            }
                         } else {
                             connections[j] = 1
+                            
+                            if (j in adjacents) {
+                                adjacents[j].push(points[i])
+                            } else {
+                                adjacents[j] = [points[i]]
+                            }
                         }
                     }
                 }
             }
         }
 
+        adjacents = removeDuplicatesFromDictionary(adjacents);
 
         let odd = 0;
         let even = 0;
@@ -99,6 +141,16 @@ let game = {
         }
 
         console.log(connections);
+
+
+
+        while (current !== endPos) {
+            
+        }
+
+        // console.log(adjacents[1][0].pos.x/100-1, (game.canvas.height-(adjacents[current][0].pos.y))/100-1)
+        // console.log(adjacents[1][1].pos.x/100-1, (game.canvas.height-(adjacents[current][1].pos.y))/100-1)
+        // console.log(adjacents[1][2].pos.x/100-1, (game.canvas.height-(adjacents[current][2].pos.y))/100-1)
     },
     stop: function() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -109,7 +161,6 @@ function Vector2D(x, y) {
     this.x = x;
     this.y = y;
 }
-
 
 
 function animate(){
