@@ -144,9 +144,9 @@ let game = {
 
 
 
-        while (current !== endPos) {
-            
-        }
+        // while (current !== endPos) {
+
+        // }
 
         // console.log(adjacents[1][0].pos.x/100-1, (game.canvas.height-(adjacents[current][0].pos.y))/100-1)
         // console.log(adjacents[1][1].pos.x/100-1, (game.canvas.height-(adjacents[current][1].pos.y))/100-1)
